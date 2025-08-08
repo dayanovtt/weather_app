@@ -1,24 +1,20 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 from app.models import WeatherResponse, WeatherRequest
 from app.services import get_coordinates, get_current_temperature
-from app.thermometer import Thermometer
-
-
+from app.temperature_converter import to_fahrenheit, to_celsius
 
 app = FastAPI()
 
 
-@app.post('/weather', response_model=WeatherResponse)
+@app.post("/weather", response_model=WeatherResponse)
 async def get_weather(req: WeatherRequest):
     lat, lon = await get_coordinates(req.city)
     temp_c = await get_current_temperature(lat, lon)
 
-    thermometer = Thermometer(temp_c)
-
-    if req.scale == 'F':
-        temp = thermometer.to_farenheit()
+    if req.scale == "F":
+        temp = to_fahrenheit(temp_c)
     else:
-        temp = thermometer.to_celsius()
+        temp = to_celsius(temp_c)
 
     return WeatherResponse(temperature=round(temp, 1), scale=req.scale)
