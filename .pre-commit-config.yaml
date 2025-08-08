@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.1.0  # можно обновлять по необходимости
+    hooks:
+      - id: black
+        args: [--line-length=88]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.9.0
+    hooks:
+      - id: mypy
+        # можно добавить дополнительные зависимости для проверок типов:
+        # additional_dependencies: ["types-requests", "types-PyYAML"]
