@@ -1,8 +1,6 @@
-import os
 from pathlib import Path
-from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field, ValidationError
+from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -19,16 +17,4 @@ class Settings(BaseSettings):
     )
 
 
-def get_settings(api_key: Optional[str] = None) -> Settings:
-    if api_key is not None:
-        # передали явно api_key — создаём объект с ним
-        return Settings(api_key=api_key)
-    # иначе загрузка из env и .env файла
-    return Settings()
-
-
-try:
-    settings = get_settings(api_key=os.getenv("API_KEY"))
-except ValidationError as e:
-    # Явно ругаемся если ключа нет
-    raise RuntimeError("API_KEY not set in environment or .env") from e
+settings = Settings()
