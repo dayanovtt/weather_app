@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
@@ -13,8 +14,16 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parent.parent / ".env",
         env_file_encoding="utf-8",
-        populate_by_name=True,  # Позволяет использовать alias
+        populate_by_name=True,
     )
 
 
-settings = Settings()
+def get_settings() -> Settings:
+    # Если API_KEY в окружении, берём оттуда
+    if "API_KEY" in os.environ:
+        return Settings(**os.environ)
+    # Иначе из .env (локально)
+    return Settings()
+
+
+settings = get_settings()
