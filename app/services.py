@@ -1,11 +1,14 @@
+from typing import Tuple, Union
 import httpx
 from fastapi import HTTPException, status
 from config.settings import settings
-from typing import Tuple
+
+# Определяем тип для параметров запроса
+ParamsType = dict[str, Union[str, int, float, bool, None]]
 
 
 async def get_coordinates(city: str) -> Tuple[float, float]:
-    params = {"q": city, "limit": 1, "appid": settings.api_key}
+    params: ParamsType = {"q": city, "limit": 1, "appid": settings.api_key}
 
     async with httpx.AsyncClient(timeout=settings.request_timeout) as client:
         response = await client.get(settings.geo_url, params=params)
@@ -37,7 +40,7 @@ async def get_coordinates(city: str) -> Tuple[float, float]:
 
 
 async def get_current_temperature(lat: float, lon: float) -> float:
-    params = {
+    params: ParamsType = {
         "lat": lat,
         "lon": lon,
         "units": "metric",

@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
@@ -18,12 +17,4 @@ class Settings(BaseSettings):
     )
 
 
-def get_settings() -> Settings:
-    # Если API_KEY в окружении, берём оттуда
-    if "API_KEY" in os.environ:
-        return Settings(**os.environ)
-    # Иначе из .env (локально)
-    return Settings()
-
-
-settings = get_settings()
+settings = Settings()
