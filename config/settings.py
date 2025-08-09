@@ -1,15 +1,12 @@
-import os
 from pathlib import Path
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 
-IS_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
-
-if not IS_GITHUB_ACTIONS:
-    dotenv_path = Path(__file__).resolve().parent.parent / ".env"
-    if dotenv_path.is_file():
-        load_dotenv(dotenv_path)
+# Загружаем .env, если он есть (только локально)
+dotenv_path = Path(__file__).resolve().parent.parent / ".env"
+if dotenv_path.is_file():
+    load_dotenv(dotenv_path)
 
 
 class Settings(BaseSettings):
@@ -24,12 +21,5 @@ class Settings(BaseSettings):
     )
 
 
-def get_settings() -> Settings:
-    api_key = os.getenv("API_KEY")
-    if not api_key:
-        raise RuntimeError("API_KEY is required in environment")
-    # Передаем именно с именем alias-а
-    return Settings(API_KEY=api_key)
-
-
-settings = get_settings()
+# Просто создаём Settings — pydantic подхватит API_KEY из os.environ (уже с alias)
+settings = Settings()
