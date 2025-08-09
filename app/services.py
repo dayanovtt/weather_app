@@ -1,10 +1,10 @@
 import httpx
 from fastapi import HTTPException, status
-
 from config.settings import settings
+from typing import Tuple
 
 
-async def get_coordinates(city: str) -> tuple[float, float]:
+async def get_coordinates(city: str) -> Tuple[float, float]:
     params = {"q": city, "limit": 1, "appid": settings.api_key}
 
     async with httpx.AsyncClient(timeout=settings.request_timeout) as client:
@@ -20,7 +20,8 @@ async def get_coordinates(city: str) -> tuple[float, float]:
 
     if not isinstance(data, list) or not data:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Город не найден"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Город не найден",
         )
 
     lat = data[0].get("lat")
@@ -28,7 +29,8 @@ async def get_coordinates(city: str) -> tuple[float, float]:
 
     if lat is None or lon is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Некорректные данные о городе"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Некорректные данные о городе",
         )
 
     return lat, lon
