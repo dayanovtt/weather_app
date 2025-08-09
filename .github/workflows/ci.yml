@@ -49,3 +49,6 @@ jobs:
 
       - name: Run tests
         run: pytest --maxfail=1 --disable-warnings -q
+
+      - name: Print environment variables
+        run: env
