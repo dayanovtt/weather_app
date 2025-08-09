@@ -32,4 +32,4 @@ def get_settings() -> Settings:
     return Settings(API_KEY=api_key)
 
 
-settings = get_settings()  # mypy больше ругаться не будет
+settings = get_settings()
