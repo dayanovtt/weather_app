@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field, ValidationError
+from pydantic import Field
 
 IS_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
@@ -24,10 +24,12 @@ class Settings(BaseSettings):
     )
 
 
-try:
-    settings = Settings()
-except ValidationError as e:
-    raise RuntimeError(
-        "Ошибка инициализации Settings: API_KEY не найден. "
-        "Убедитесь, что переменная API_KEY задана в окружении или в .env"
-    ) from e
+def get_settings() -> Settings:
+    api_key = os.getenv("API_KEY")
+    if not api_key:
+        raise RuntimeError("API_KEY is required in environment")
+    # Передаем именно с именем alias-а
+    return Settings(API_KEY=api_key)
+
+
+settings = get_settings()  # mypy больше ругаться не будет
