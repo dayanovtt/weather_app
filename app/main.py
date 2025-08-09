@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 
-from app.models import WeatherResponse, WeatherRequest
+from app.models import WeatherRequest, WeatherResponse
 from app.services import get_coordinates, get_current_temperature
-from app.temperature_converter import to_fahrenheit, to_celsius
+from app.temperature_converter import to_celsius, to_fahrenheit
 
 app = FastAPI()
 
 
 @app.post("/weather", response_model=WeatherResponse)
-async def get_weather(req: WeatherRequest):
+async def get_weather(req: WeatherRequest) -> WeatherResponse:
     lat, lon = await get_coordinates(req.city)
     temp_c = await get_current_temperature(lat, lon)
 
