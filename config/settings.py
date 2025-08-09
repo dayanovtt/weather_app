@@ -1,4 +1,3 @@
-from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 
@@ -11,8 +10,6 @@ class Settings(BaseSettings):
     lang: str = "ru"
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).resolve().parent.parent / ".env",
-        env_file_encoding="utf-8",
         populate_by_name=True,
     )
 
