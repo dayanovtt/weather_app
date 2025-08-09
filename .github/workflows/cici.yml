@@ -1,0 +1,24 @@
+name: Check .env presence
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check_env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: List files in repo root and show .env
+        run: |
+          ls -la
+          if [ -f .env ]; then
+            echo ".env found. Content:"
+            cat .env
+          else
+            echo ".env file NOT found"
+          fi
